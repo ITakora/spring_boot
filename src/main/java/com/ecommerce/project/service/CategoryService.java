@@ -1,4 +1,4 @@
-package com.ecommerce.project.sevice;
+package com.ecommerce.project.service;
 
 import com.ecommerce.project.model.Category;
 

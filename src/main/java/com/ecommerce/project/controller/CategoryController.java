@@ -2,7 +2,7 @@ package com.ecommerce.project.controller;
 
 
 import com.ecommerce.project.model.Category;
-import com.ecommerce.project.sevice.CategoryService;
+import com.ecommerce.project.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +44,7 @@ public class CategoryController {
         }
     }
 
-    @PutMapping(" /public/categories/{categoryId}")
+    @PutMapping("/public/categories/{categoryId}")
     public ResponseEntity<String> updateCategory(@RequestBody Category category, @PathVariable Long categoryId) {
         try {
 
