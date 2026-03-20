@@ -1,6 +1,7 @@
 package com.ecommerce.project.exceptions;
 
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,6 +24,14 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         return ResponseEntity.badRequest().body(errors);
+
+    }
+
+    @ExceptionHandler(value = { ResourceNotFoundException.class })
+    public ResponseEntity<String> myResourceNotFoundException (ResourceNotFoundException e) {
+
+        String errorMessage = e.getMessage();
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
 
     }
 
