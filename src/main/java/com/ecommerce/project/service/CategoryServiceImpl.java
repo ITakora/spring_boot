@@ -42,32 +42,42 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void createCategory(Category category) {
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        Category category = modelMapper.map(categoryDTO, Category.class);
+        Category categoryFromDB = categoryRepository.findByCategoryName(category.getCategoryName().toLowerCase());
 
-        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName().toLowerCase());
-        if (savedCategory != null) {
+        if (categoryFromDB != null) {
             throw new APIException("Category already exists");
         }
-            categoryRepository.save(category);
+
+        Category savedCategory = categoryRepository.save(category);
+
+        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
     @Override
-    public String deleteCategory(Long id) {
+    public CategoryDTO deleteCategory(Long id) {
 
         Category category = categoryRepository.findById(id).orElseThrow(() -> new  ResourceNotFoundException("Category", "id", id));
+
         categoryRepository.delete(category);
-        return "category with category ID :"+ id +" has been deleted";
+        return modelMapper.map(category, CategoryDTO.class);
     }
 
     @Override
-    public Category updateCategory(Category category, Long categoryId) {
+    public CategoryDTO updateCategory(CategoryDTO category, Long categoryId) {
+
+
+
         Optional<Category> categories = categoryRepository.findById(categoryId);
 
         categories.orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
 
-
         category.setCategoryId(categoryId);
-        return categoryRepository.save(category);
+        Category toCategory = modelMapper.map(category, Category.class);
+         Category savedCategory = categoryRepository.save(toCategory);
+
+         return modelMapper.map(savedCategory, CategoryDTO.class);
 
     }
 }
