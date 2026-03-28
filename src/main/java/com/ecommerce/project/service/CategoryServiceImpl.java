@@ -31,17 +31,19 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize) {
 
-        List<Category> categories;
+        Pageable pageable;
+
 
         if (pageNumber == null || pageNumber <= 0) {
-             categories = categoryRepository.findAll();
-        } else  {
+//             categories = categoryRepository.findAll();
+            pageable = Pageable.unpaged();
+        }else {
+                pageable = PageRequest.of(pageNumber, pageSize);
+            }
 
-            Pageable pageable = PageRequest.of(pageNumber, pageSize);
-            Page<Category> categoryPage = categoryRepository.findAll(pageable);
+            Page<Category> categoryPage  = categoryRepository.findAll(pageable);
 
-            categories = categoryPage.getContent();
-        }
+            List<Category> categories = categoryPage.getContent();
 
 
         if (categories.isEmpty()) {
@@ -52,7 +54,11 @@ public class CategoryServiceImpl implements CategoryService {
 
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setContent(categoryDTOS);
-
+        categoryResponse.setPageNumber(categoryPage.getNumber());
+        categoryResponse.setPageSize(categoryPage.getSize());
+        categoryResponse.setTotalPages(categoryPage.getTotalPages());
+        categoryResponse.setTotalElements(categoryPage.getTotalElements());
+        categoryResponse.setLastPage(categoryPage.isLast());
         return categoryResponse;
     }
 
